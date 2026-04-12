@@ -15,7 +15,7 @@ const { encoding, decoding } = require('lib0')
 const connectDB  = require('./config/db')
 const Room       = require('./models/Room')
 const authRoutes = require('./routes/auth')
-const roomRoutes = require('./routes/rooms')
+const roomRoutes = require('./routes/Rooms')
 const executeRoutes = require('./routes/execute')
 
 const PORT = process.env.PORT || 5000
