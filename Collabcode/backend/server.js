@@ -253,10 +253,16 @@ wss.on('connection', (conn, request) => {
 // START SERVER
 // ─────────────────────────────────────────────
 const start = async () => {
-  await connectDB()
+  try {
+    await connectDB()
+    console.log("MongoDB connected ✅")
+  } catch (err) {
+    console.error("MongoDB failed ❌", err.message)
+  }
 
+  // 🔥 ALWAYS START SERVER (IMPORTANT)
   httpServer.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`)
+    console.log(`Server running on port ${PORT}`)
   })
 }
 
