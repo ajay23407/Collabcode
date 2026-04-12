@@ -12,7 +12,7 @@ import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import { useYjs } from '../hooks/useYjs';
-import OutputPanel from '../components/OutputPanel';
+import OutputPanel from '../components/Outputpanel';
 
 const LANGUAGES = ['javascript', 'typescript', 'python', 'java', 'cpp', 'go', 'rust', 'html', 'css'];
 
