@@ -18,9 +18,13 @@ export function SocketProvider({ children }) {
     // Only create a socket when the user is logged in
     if (!user) return
 
-    const newSocket = io('http://localhost:5000', {
-      auth: { username: user.username, userId: user.id },
-    })
+    const newSocket = io(
+  import.meta.env.VITE_API_URL || 'http://localhost:5000',
+  {
+    auth: { username: user.username, userId: user.id },
+    transports: ['websocket']
+  }
+)
 
     newSocket.on('connect',       ()    => console.log('[Socket.IO] Connected:', newSocket.id))
     newSocket.on('disconnect',    (r)   => console.log('[Socket.IO] Disconnected:', r))
