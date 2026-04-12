@@ -261,9 +261,9 @@ const start = async () => {
   }
 
   // 🔥 ALWAYS START SERVER (IMPORTANT)
-  httpServer.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-  })
+ httpServer.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`)
+})
 }
 
 start()
