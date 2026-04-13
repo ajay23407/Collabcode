@@ -27,8 +27,8 @@ const app = express()
 
 app.use(cors({
   origin: [
+    process.env.CLIENT_URL,
     "http://localhost:5173",
-    process.env.CLIENT_URL
   ],
   credentials: true
 }))
@@ -52,8 +52,8 @@ const httpServer = http.createServer(app)
 const io = new Server(httpServer, {
   cors: {
     origin: [
+      process.env.CLIENT_URL,
       "http://localhost:5173",
-      process.env.CLIENT_URL
     ],
     methods: ["GET", "POST"],
     credentials: true
