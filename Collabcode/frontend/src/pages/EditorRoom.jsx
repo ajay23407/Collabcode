@@ -5,7 +5,7 @@ import MonacoEditor from '@monaco-editor/react';
 import { 
   Play, ChevronLeft, Users, Share2, 
   MessageSquare, Terminal, Settings, 
-  Send, X, Sun, Moon, Zap, Globe
+  Send, X, Sun, Moon, Zap, Globe, Copy, Check
 } from 'lucide-react';
 import { getRoom, updateRoomLanguage } from '../api';
 import api from '../api';
@@ -54,6 +54,13 @@ export default function EditorRoom() {
     editor: editorInstance,
     monaco: monacoInstance,
   });
+
+  // --- Share Logic ---
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   useEffect(() => {
     getRoom(roomId)
@@ -144,25 +151,37 @@ export default function EditorRoom() {
       
       {/* --- Top Command Bar --- */}
       <header className={`h-14 min-h-[56px] border-b flex items-center justify-between px-4 z-40 transition-colors duration-500 ${isDarkMode ? 'bg-[#0A0A0A] border-white/5 shadow-2xl' : 'bg-white border-slate-200 shadow-sm'}`}>
-        <div className="flex items-center gap-4 min-w-0">
-          <button onClick={() => navigate('/dashboard')} className={`p-2 rounded-lg transition-all ${isDarkMode ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}>
+        
+        {/* Left Section: Added flex-1 and min-w-0 for truncation */}
+        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0 mr-2">
+          <button onClick={() => navigate('/dashboard')} className={`p-2 rounded-lg transition-all shrink-0 ${isDarkMode ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}>
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <div className={`h-8 w-px hidden md:block ${isDarkMode ? 'bg-white/5' : 'bg-slate-200'}`} />
-          <div className="flex flex-col">
+          <div className={`h-8 w-px hidden md:block shrink-0 ${isDarkMode ? 'bg-white/5' : 'bg-slate-200'}`} />
+          <div className="flex flex-col min-w-0">
             <h1 className={`text-sm font-bold truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{room?.name}</h1>
             <div className="flex items-center gap-2">
-              <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${yjsSynced ? 'bg-emerald-500' : 'bg-yellow-500'}`} />
-              <span className="text-[10px] font-mono uppercase tracking-tighter opacity-60">{language} // {yjsSynced ? 'Ready' : 'Syncing'}</span>
+              <span className={`w-1.5 h-1.5 rounded-full animate-pulse shrink-0 ${yjsSynced ? 'bg-emerald-500' : 'bg-yellow-500'}`} />
+              <span className="text-[10px] font-mono uppercase tracking-tighter opacity-60 truncate">{language} // {yjsSynced ? 'Ready' : 'Syncing'}</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Right Section: Added shrink-0 to prevent button squishing */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Share Button */}
+          <button 
+            onClick={() => setShowShare(true)}
+            className={`p-2 sm:p-2.5 rounded-xl border transition-all flex items-center gap-2 ${isDarkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-indigo-600'}`}
+          >
+            <Share2 className="w-4 h-4" />
+            <span className="text-xs font-bold hidden md:inline">Share</span>
+          </button>
+
           {/* Theme Toggle */}
           <button 
             onClick={() => setIsDarkMode(!isDarkMode)}
-            className={`p-2.5 rounded-xl border transition-all ${isDarkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-indigo-600'}`}
+            className={`p-2 sm:p-2.5 rounded-xl border transition-all ${isDarkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-slate-50 border-slate-200 hover:bg-slate-100 text-indigo-600'}`}
           >
             {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -177,16 +196,62 @@ export default function EditorRoom() {
             </select>
           </div>
 
-          <button onClick={() => setShowChat(!showChat)} className={`p-2.5 rounded-xl border transition-all ${showChat ? (isDarkMode ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' : 'bg-indigo-50 border-indigo-200 text-indigo-600') : (isDarkMode ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200')}`}>
+          <button onClick={() => setShowChat(!showChat)} className={`p-2 sm:p-2.5 rounded-xl border transition-all ${showChat ? (isDarkMode ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' : 'bg-indigo-50 border-indigo-200 text-indigo-600') : (isDarkMode ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200')}`}>
             <MessageSquare className="w-4 h-4" />
           </button>
 
-          <button onClick={handleRunCode} disabled={running} className={`ml-2 flex items-center gap-3 px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-[0.15em] transition-all ${running ? 'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30' : (isDarkMode ? 'bg-emerald-500 text-black hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 hover:bg-indigo-700')}`}>
+          <button onClick={handleRunCode} disabled={running} className={`ml-1 sm:ml-2 flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-2 sm:py-2.5 rounded-xl font-black text-[10px] sm:text-[11px] uppercase tracking-[0.1em] sm:tracking-[0.15em] transition-all ${running ? 'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30' : (isDarkMode ? 'bg-emerald-500 text-black hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 hover:bg-indigo-700')}`}>
             {running ? <Zap className="w-3 h-3 animate-bounce" /> : <Play className="fill-current w-3 h-3" />}
-            {running ? 'Running' : 'Execute'}
+            <span className="hidden xs:inline">{running ? '...' : 'Run'}</span>
           </button>
         </div>
       </header>
+
+      {/* Share Modal Overlay */}
+      <AnimatePresence>
+        {showShare && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={() => setShowShare(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className={`w-full max-w-md p-6 rounded-3xl border shadow-2xl transition-colors duration-500 ${isDarkMode ? 'bg-[#0A0A0A] border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  <Share2 className="w-5 h-5 text-indigo-500" /> Share Room
+                </h3>
+                <button onClick={() => setShowShare(false)} className="p-2 hover:bg-white/5 rounded-full">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <p className="text-sm text-slate-500 mb-6">Invite others to collaborate in real-time by sharing this unique link.</p>
+              
+              <div className="flex gap-2 relative">
+                <input 
+                  readOnly 
+                  value={window.location.href}
+                  className={`flex-1 text-xs font-mono p-4 rounded-xl border outline-none ${isDarkMode ? 'bg-black border-white/10 text-indigo-400' : 'bg-slate-50 border-slate-200 text-indigo-600'}`}
+                />
+                <button 
+                  onClick={handleCopyLink}
+                  className={`px-4 rounded-xl border flex items-center gap-2 transition-all ${copied ? 'bg-emerald-500 border-emerald-500 text-white' : (isDarkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white border-slate-200 hover:bg-slate-50')}`}
+                >
+                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  <span className="text-[10px] font-bold uppercase">{copied ? 'Copied' : 'Copy'}</span>
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* --- Main Workspace --- */}
       <div className="flex flex-1 overflow-hidden">
