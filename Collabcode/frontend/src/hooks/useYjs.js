@@ -70,7 +70,7 @@ export function useYjs({ roomId, username, editor, monaco }) {
     //   - Receives and applies remote changes
     //   - Reconnects if the connection drops
   const provider = new WebsocketProvider(
-  `ws://localhost:5000/yjs?room=${roomId}`,
+  `wss://collabcodee.onrender.com/yjs?room=${roomId}`,
   roomId,
   ydoc
 )     
