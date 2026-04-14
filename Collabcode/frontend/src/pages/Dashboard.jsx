@@ -18,7 +18,7 @@ export default function Dashboard() {
   const [creating, setCreating] = useState(false);
   const [joinId, setJoinId] = useState('');
   const [error, setError] = useState('');
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     getMyRooms()
@@ -92,7 +92,7 @@ export default function Dashboard() {
             <Shield className="w-5 h-5 md:w-6 md:h-6" />
           </motion.div>
           <div>
-            <span className="text-lg md:text-xl font-black tracking-tight leading-none">Emerald<span className="text-emerald-500">Core</span></span>
+            <span className="text-lg md:text-xl font-black tracking-tight leading-none">Collab<span className="text-emerald-500">Code</span></span>
             <p className="hidden md:block text-[9px] font-mono uppercase tracking-[0.3em] opacity-40">Node_Active: v4.2</p>
           </div>
         </div>
