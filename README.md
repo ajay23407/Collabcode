@@ -383,55 +383,6 @@ All room endpoints require `Authorization: Bearer <token>` header.
 
 ---
 
-## Deployment
-
-### Frontend → Vercel
-
-```bash
-cd frontend
-# Update src/api/index.js baseURL to your Render URL
-# Update src/context/SocketContext.jsx io() URL
-# Update src/hooks/useYjs.js WebsocketProvider URL (use wss://)
-
-git add .
-git commit -m "production URLs"
-git push
-```
-
-Then: [vercel.com](https://vercel.com) → New Project → Import repo → Deploy (Vite auto-detected)
-
-### Backend → Render
-
-```bash
-cd backend
-git add .
-git commit -m "add Dockerfile and render.yaml"
-git push
-```
-
-Then: [render.com](https://render.com) → New Web Service → Connect repo → Docker detected automatically
-
-**Environment variables to set in Render dashboard:**
-
-```
-MONGO_URI       mongodb+srv://...
-JWT_SECRET      your_long_secret
-JWT_EXPIRES_IN  7d
-PORT            4000
-CLIENT_URL      https://your-app.vercel.app
-NODE_ENV        production
-```
-
-### Database → MongoDB Atlas
-
-1. Create free M0 cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas)
-2. Database Access → Add user with read/write permissions
-3. Network Access → Add `0.0.0.0/0` (allow all IPs for Render)
-4. Connect → copy the `mongodb+srv://...` connection string
-5. Paste into `MONGO_URI` in both your `.env` and Render environment variables
-
----
-
 ## Supported Languages
 
 | Language | Runtime | Docker Image |
@@ -484,18 +435,4 @@ git push origin feature/your-feature-name
 Please keep commits small and focused. One feature or fix per PR.
 
 ---
-
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-<div align="center">
-  <p>Built with Node.js, React, Yjs, and Docker</p>
-  <p>
-    <a href="https://collabcode.vercel.app">Live Demo</a> ·
-    <a href="https://github.com/yourusername/collabcode/issues">Report Bug</a> ·
-    <a href="https://github.com/yourusername/collabcode/issues">Request Feature</a>
-  </p>
 </div>
